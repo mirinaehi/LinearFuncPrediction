@@ -95,6 +95,7 @@ async function trainModel(model, inputs, labels) {
   });
 }
 
+// 예측실행
 function testModel(model, inputData, normalizationData) {
   const {inputMax, inputMin, labelMin, labelMax} = normalizationData;
 
@@ -127,8 +128,8 @@ function testModel(model, inputData, normalizationData) {
   }));
 
   tfvis.render.scatterplot(
-    {name: 'Model Predictions vs Original Data'},
-    {values: [originalPoints, predictedPoints], series: ['original', 'predicted']},
+    {name: '모델 예측과 원본 데이터의 비교'},
+    {values: [originalPoints, predictedPoints], series: ['원본', '예측']},
     {
       xLabel: 'x축',
       yLabel: 'y축',
@@ -146,11 +147,11 @@ async function run() {
   }));
 
   tfvis.render.scatterplot(
-    {name: 'y = 2x+1?'},
+    {name: 'y = 2x+1 그래프'},
     {values},
     {
-      xLabel: 'x-axis',
-      yLabel: 'y-axis',
+      xLabel: 'x축',
+      yLabel: 'y축',
       height: 300
     }
   );
