@@ -91,7 +91,7 @@ async function trainModel(model, inputs, labels) {
   });
 
   const batchSize = 32;
-  const epochs = 1000;
+  const epochs = 2000;
 
   // 학습 루프 시작
   return await model.fit(inputs, labels, {
