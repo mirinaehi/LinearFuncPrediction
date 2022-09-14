@@ -5,13 +5,13 @@ console.log('Hello TensorFlow');
  * and cleaned of missing data.
  */
 async function getData() {
-  const carsDataResponse = await fetch('https://storage.googleapis.com/tfjs-tutorials/carsData.json');
-  const carsData = await carsDataResponse.json();
-  const cleaned = carsData.map(car => ({
-    mpg: car.Miles_per_Gallon,
-    horsepower: car.Horsepower,
+  const dataResponse = await fetch('data.json');
+  const rawData = await dataResponse.json();
+  const cleaned = rawData.map(data => ({
+    mpg: data.y_axis,
+    horsepower: data.x_axis,
   }))
-    .filter(car => (car.mpg != null && car.horsepower != null));
+    .filter(data => (data.mpg != null && data.horsepower != null));
 
   return cleaned;
 }
