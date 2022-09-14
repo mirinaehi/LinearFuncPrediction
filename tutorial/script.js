@@ -5,8 +5,19 @@ console.log('Hello TensorFlow');
  * and cleaned of missing data.
  */
 async function getData() {
-  const dataResponse = await fetch('data.json');
-  const rawData = await dataResponse.json();
+  let rawData = []
+  const number = 25
+  for(let n=1; n<=number; n++)
+  {
+    let obj = {
+      "x_axis" : n,
+      "y_axis" : 2 * n + 1
+    }
+    rawData.push(obj)
+  }
+
+  // const dataResponse = await fetch('data.json');
+  // const rawData = await dataResponse.json();
   const cleaned = rawData.map(data => ({
     x: data.x_axis,
     y: data.y_axis,
@@ -80,7 +91,7 @@ async function trainModel(model, inputs, labels) {
   });
 
   const batchSize = 32;
-  const epochs = 50;
+  const epochs = 1000;
 
   // 학습 루프 시작
   return await model.fit(inputs, labels, {
@@ -103,9 +114,9 @@ function testModel(model, inputData, normalizationData) {
   // We un-normalize the data by doing the inverse of the min-max scaling
   // that we did earlier.
   const [xs, preds] = tf.tidy(() => {
-
-    const xs = tf.linspace(0, 1, 100);
-    const preds = model.predict(xs.reshape([100, 1]));
+    const num = 100
+    const xs = tf.linspace(0, 1, num);
+    const preds = model.predict(xs.reshape([num, 1]));
 
     const unNormXs = xs
       .mul(inputMax.sub(inputMin))
@@ -129,7 +140,7 @@ function testModel(model, inputData, normalizationData) {
 
   tfvis.render.scatterplot(
     {name: '모델 예측과 원본 데이터의 비교'},
-    {values: [originalPoints, predictedPoints], series: ['원본', '예측']},
+    {values: [predictedPoints, originalPoints], series: ['예측', '원본']},
     {
       xLabel: 'x축',
       yLabel: 'y축',
@@ -147,7 +158,7 @@ async function run() {
   }));
 
   tfvis.render.scatterplot(
-    {name: 'y = 2x+1 그래프'},
+    {name: 'y = 2x+1 그래프에 맞춰 점찍기(원본 데이터)'},
     {values},
     {
       xLabel: 'x축',
