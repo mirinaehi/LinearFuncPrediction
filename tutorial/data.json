@@ -1,42 +1,42 @@
 [
   {
-    "x_axis": "1",
-    "y_axis": "3"
+    "x_axis": 1,
+    "y_axis": 3
   },
   {
-    "x_axis": "2",
-    "y_axis": "5"
+    "x_axis": 2,
+    "y_axis": 5
   },
   {
-    "x_axis": "3",
-    "y_axis": "7"
+    "x_axis": 3,
+    "y_axis": 7
   },
   {
-    "x_axis": "4",
-    "y_axis": "9"
+    "x_axis": 4,
+    "y_axis": 9
   },
   {
-    "x_axis": "5",
-    "y_axis": "11"
+    "x_axis": 5,
+    "y_axis": 11
   },
   {
-    "x_axis": "6",
-    "y_axis": "13"
+    "x_axis": 6,
+    "y_axis": 13
   },
   {
-    "x_axis": "7",
-    "y_axis": "15"
+    "x_axis": 7,
+    "y_axis": 15
   },
   {
-    "x_axis": "8",
-    "y_axis": "17"
+    "x_axis": 8,
+    "y_axis": 17
   },
   {
-    "x_axis": "9",
-    "y_axis": "19"
+    "x_axis": 9,
+    "y_axis": 19
   },
   {
-    "x_axis": "10",
-    "y_axis": "21"
+    "x_axis": 10,
+    "y_axis": 21
   }
 ]
