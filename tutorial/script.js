@@ -8,10 +8,10 @@ async function getData() {
   const dataResponse = await fetch('data.json');
   const rawData = await dataResponse.json();
   const cleaned = rawData.map(data => ({
-    mpg: data.y_axis,
-    horsepower: data.x_axis,
+    x: data.x_axis,
+    y: data.y_axis,
   }))
-    .filter(data => (data.mpg != null && data.horsepower != null));
+    .filter(data => (data.y != null && data.x != null));
 
   return cleaned;
 }
@@ -44,8 +44,8 @@ function convertToTensor(data) {
     tf.util.shuffle(data);
 
     // Step 2. Convert data to Tensor
-    const inputs = data.map(d => d.horsepower)
-    const labels = data.map(d => d.mpg);
+    const inputs = data.map(d => d.x)
+    const labels = data.map(d => d.y);
 
     const inputTensor = tf.tensor2d(inputs, [inputs.length, 1]);
     const labelTensor = tf.tensor2d(labels, [labels.length, 1]);
@@ -82,6 +82,7 @@ async function trainModel(model, inputs, labels) {
   const batchSize = 32;
   const epochs = 50;
 
+  // 학습 루프 시작
   return await model.fit(inputs, labels, {
     batchSize,
     epochs,
@@ -122,15 +123,15 @@ function testModel(model, inputData, normalizationData) {
   });
 
   const originalPoints = inputData.map(d => ({
-    x: d.horsepower, y: d.mpg,
+    x: d.x, y: d.y,
   }));
 
   tfvis.render.scatterplot(
     {name: 'Model Predictions vs Original Data'},
     {values: [originalPoints, predictedPoints], series: ['original', 'predicted']},
     {
-      xLabel: 'Horsepower',
-      yLabel: 'MPG',
+      xLabel: 'x축',
+      yLabel: 'y축',
       height: 300
     }
   );
@@ -140,16 +141,16 @@ async function run() {
   // Load and plot the original input data that we are going to train on.
   const data = await getData();
   const values = data.map(d => ({
-    x: d.horsepower,
-    y: d.mpg,
+    x: d.x,
+    y: d.y,
   }));
 
   tfvis.render.scatterplot(
-    {name: 'Horsepower v MPG'},
+    {name: 'y = 2x+1?'},
     {values},
     {
-      xLabel: 'Horsepower',
-      yLabel: 'MPG',
+      xLabel: 'x-axis',
+      yLabel: 'y-axis',
       height: 300
     }
   );
