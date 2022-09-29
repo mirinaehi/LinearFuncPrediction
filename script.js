@@ -1,9 +1,4 @@
-console.log('Hello TensorFlow');
-
-/**
- * Get the car data reduced to just the variables we are interested
- * and cleaned of missing data.
- */
+// 학습데이터 수집 및 손실데이터 정리
 async function getData() {
   let rawData = []
   const number = 25
@@ -15,9 +10,10 @@ async function getData() {
     }
     rawData.push(obj)
   }
-
+  // json 처리시
   // const dataResponse = await fetch('data.json');
   // const rawData = await dataResponse.json();
+
   const cleaned = rawData.map(data => ({
     x: data.x_axis,
     y: data.y_axis,
@@ -27,6 +23,9 @@ async function getData() {
   return cleaned;
 }
 
+/* 모델 arch 정의
+   두 개의 layer(입력, 출력)를 사용
+ */
 function createModel() {
   // Create a sequential model
   const model = tf.sequential();
@@ -41,14 +40,11 @@ function createModel() {
 }
 
 /**
- * Convert the input data to tensors that we can use for machine
- * learning. We will also do the important best practices of _shuffling_
- * the data and _normalizing_ the data
- * MPG on the y-axis.
+ * 머신러닝에 사용할 수 있도록 data를 tensor로 변환한다.
+ * 데이터 shuffling과 nomalization(정규화)를 진행
  */
 function convertToTensor(data) {
-  // Wrapping these calculations in a tidy will dispose any
-  // intermediate tensors.
+  // 계산을 깔끔이 정돈하면 중간 tensor들을 dispose 할 수 있다.
 
   return tf.tidy(() => {
     // Step 1. Shuffle the data
@@ -170,15 +166,14 @@ async function run() {
   const model = createModel();
   tfvis.show.modelSummary({name: 'Model Summary'}, model);
 
-  // Convert the data to a form we can use for training.
+  // 학습할 수 있는 형태로 데이터 convert
   const tensorData = convertToTensor(data);
   const {inputs, labels} = tensorData;
 
-  // Train the model
+  // 모델 학습
   await trainModel(model, inputs, labels, 100);
 
-  // Make some predictions using the model and compare them to the
-  // original data
+  // 데이터예측
   testModel(model, data, tensorData, 100);
 
   await trainModel(model, inputs, labels, 500);
