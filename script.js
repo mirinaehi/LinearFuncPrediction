@@ -2,7 +2,7 @@
 async function getData() {
   let rawData = []
   const number = 25
-  for(let n=1; n<=number; n++)
+  for(let n=0; n<=number; n++)
   {
     let obj = {
       "x_axis" : n,
