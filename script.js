@@ -33,8 +33,11 @@ function createModel() {
   // create sequential model(한 계층의 출력이 다음 계층의 입력으로 사용함)
   const model = tf.sequential();
 
-  // Add a single input layer
+  // Add a single input layer (activation function 없음)
   model.add(tf.layers.dense({inputShape: [1], units: 1, useBias: true}));
+
+  // hidden layer 추가
+  model.add(tf.layers.dense({units: 1, useBias: true}));
 
   // Add an output layer
   model.add(tf.layers.dense({units: 1, useBias: true}));
@@ -197,8 +200,8 @@ async function run() {
   await trainModel(model, inputs, labels, 400);
   testModel(model, data, tensorData, 100+400);
 
-  await trainModel(model, inputs, labels, 1500);
-  testModel(model, data, tensorData, 100+400+1500);
+  await trainModel(model, inputs, labels, 2000);
+  testModel(model, data, tensorData, 100+400+2000);
 }
 
 document.addEventListener('DOMContentLoaded', run);
