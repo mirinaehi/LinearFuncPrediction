@@ -55,13 +55,13 @@ function convertToTensor(data) {
     tf.util.shuffle(data);
 
     // Step 2. data를 Tensor로 변환
-    const inputs = data.map(d => d.x)
+    const inputs = data.map(d => d.x);
     const labels = data.map(d => d.y);
 
     const inputTensor = tf.tensor2d(inputs, [inputs.length, 1]);
     const labelTensor = tf.tensor2d(labels, [labels.length, 1]);
 
-    // Step 3. min-max scaling을 사용하여  data를 0~1로 정규화(nomalize)
+/*    // Step 3. min-max scaling을 사용하여  data를 0~1로 정규화(nomalize)
     // 정규화를 진행하면, 효과적인 학습을 방해하는 요소들을 제거할 수 있음
     const inputMax = inputTensor.max();
     const inputMin = inputTensor.min();
@@ -69,16 +69,18 @@ function convertToTensor(data) {
     const labelMin = labelTensor.min();
 
     const normalizedInputs = inputTensor.sub(inputMin).div(inputMax.sub(inputMin));
-    const normalizedLabels = labelTensor.sub(labelMin).div(labelMax.sub(labelMin));
+    const normalizedLabels = labelTensor.sub(labelMin).div(labelMax.sub(labelMin));*/
 
     return {
-      inputs: normalizedInputs,
+      inputs: inputTensor,
+      labels: labelTensor
+      /*inputs: normalizedInputs,
       labels: normalizedLabels,
       // 나중에 사용하기 위한 min/max bounds를 반환
       inputMax,
       inputMin,
       labelMax,
-      labelMin,
+      labelMin,*/
     }
   });
 }
@@ -109,24 +111,34 @@ async function trainModel(model, inputs, labels, epochs) {
 
 // 예측실행
 function testModel(model, inputData, normalizationData, epochs) {
-  const {inputMax, inputMin, labelMin, labelMax} = normalizationData;
+  // const {inputMax, inputMin, labelMin, labelMax} = normalizationData;
 
   const [xs, preds] = tf.tidy(() => {
-    // 0과 1 사이 균일한 간격의 데이터 num개 생성(모델에 제공할 새 예시)
-    const num = 100
-    const xs = tf.linspace(0, 1, num);
-    const preds = model.predict(xs.reshape([num, 1]));
+    // 우리가 직접 예측할 데이터를 집어넣어줌
+    let xs = [];
+    for(let x=0; x<30; x++)
+      xs.push(x);
 
-    const unNormXs = xs
-      .mul(inputMax.sub(inputMin))
-      .add(inputMin);
+    const xsTensor = tf.tensor2d(xs, [xs.length, 1]);
 
-    const unNormPreds = preds
-      .mul(labelMax.sub(labelMin))
-      .add(labelMin);
+    const preds = model.predict(xsTensor);
+    return [xsTensor.dataSync(), preds.dataSync()]
 
+    // // 0과 1 사이 균일한 간격의 데이터 num개 생성(모델에 제공할 새 예시)
+    // const num = 100
+    // const xs = tf.linspace(0, 1, num);
+    // const preds = model.predict(xs.reshape([num, 1]));
+    //
+    // const unNormXs = xs
+    //   .mul(inputMax.sub(inputMin))
+    //   .add(inputMin);
+    //
+    // const unNormPreds = preds
+    //   .mul(labelMax.sub(labelMin))
+    //   .add(labelMin);
+    //
     // Un-normalize the data(원래 데이터로 돌림)
-    return [unNormXs.dataSync(), unNormPreds.dataSync()];
+    // return [unNormXs.dataSync(), unNormPreds.dataSync()];
   });
 
   const predictedPoints = Array.from(xs).map((val, i) => {
@@ -184,8 +196,8 @@ async function run() {
   await trainModel(model, inputs, labels, 500);
   testModel(model, data, tensorData, 500);
 
-  await trainModel(model, inputs, labels, 2000);
-  testModel(model, data, tensorData, 2000);
+  await trainModel(model, inputs, labels, 1000);
+  testModel(model, data, tensorData, 1000);
 }
 
 document.addEventListener('DOMContentLoaded', run);
