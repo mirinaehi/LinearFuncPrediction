@@ -116,7 +116,7 @@ function testModel(model, inputData, normalizationData, epochs) {
   const [xs, preds] = tf.tidy(() => {
     // 우리가 직접 예측할 데이터를 집어넣어줌
     let xs = [];
-    for(let x=0; x<30; x++)
+    for(let x=0; x<30; x+=0.5)
       xs.push(x);
 
     const xsTensor = tf.tensor2d(xs, [xs.length, 1]);
@@ -193,11 +193,12 @@ async function run() {
   // 데이터예측
   testModel(model, data, tensorData, 100);
 
-  await trainModel(model, inputs, labels, 500);
-  testModel(model, data, tensorData, 500);
+  // TODO : trainModel에서 epoch는 누적이 되는거 같음. 정확한 확인이 필요
+  await trainModel(model, inputs, labels, 400);
+  testModel(model, data, tensorData, 100+400);
 
-  await trainModel(model, inputs, labels, 1000);
-  testModel(model, data, tensorData, 1000);
+  await trainModel(model, inputs, labels, 1500);
+  testModel(model, data, tensorData, 100+400+1500);
 }
 
 document.addEventListener('DOMContentLoaded', run);
