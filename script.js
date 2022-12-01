@@ -154,7 +154,8 @@ function testModel(model, inputData, normalizationData, epochs) {
 
   tfvis.render.scatterplot(
     {name: `모델 예측과 원본 데이터의 비교 epoch:${epochs}`},
-    {values: [predictedPoints, originalPoints], series: ['예측', '원본']},
+    // 문자열의 사전순으로 정렬됨('1.원본'이 먼저 나타남)
+    {values: [originalPoints, predictedPoints], series: ['1.원본(y=2x+1)', '2.예측']},
     {
       xLabel: 'x축',
       yLabel: 'y축',
@@ -174,7 +175,7 @@ async function run() {
   // 산점도로 rendering
   tfvis.render.scatterplot(
     {name: 'y = 2x+1 그래프에 맞춰 점찍기(원본 데이터)'},
-    {values},
+    {values: [values], series:['y=2x+1']},
     {
       xLabel: 'x축',
       yLabel: 'y축',
